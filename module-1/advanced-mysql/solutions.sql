@@ -42,6 +42,20 @@ FROM titles AS tt
 GROUP BY ttau.au_id
 ORDER BY "total profits" DESC
 
+--ANOTHER WAY WHICH SHOW US A DIFFERETN RESULT
+--   --> using the parenthesis like a 5 year old boy in elementary school
+
+SELECT TOP 3
+ttau.au_id,
+sum(tt.price * sls.qty * (tt.royalty / 100) * (ttau.royaltyper / 100)) AS "agregated sales_royalty", -- an option could have been to create another table with the previous query and call this table to make the sum aggregated function
+sum(tt.advance*(ttau.royaltyper/100)) AS "agregated advanced", -- an option could have been to create another table with the previous query and call this table to make the sum aggregated function
+sum(tt.price * sls.qty *( tt.royalty / 100 )* (ttau.royaltyper / 100)) + sum(tt.advance*(ttau.royaltyper/100)) AS [total profits]
+FROM titles AS tt 
+    INNER JOIN titleauthor AS ttau ON tt.title_id = ttau.title_id
+    INNER JOIN sales AS sls ON tt.title_id = sls.title_id
+GROUP BY ttau.au_id
+ORDER BY 4 DESC
+
 
 -- Challenge 2 - Alternative Solution - TEMPORAL TABLE
 
@@ -84,3 +98,5 @@ sum(advance) + sum(sales_royalty) AS [total profit]
 FROM alternative_permanent_profit
 GROUP BY au_id
 ORDER BY "total profit" DESC
+
+
